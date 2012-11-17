@@ -22,15 +22,16 @@ form {
 <ul>
 <li>
 <h3>shape_id</h3>
-<p><input value="320,515,260,565,335,545" /></p>
+<input type="hidden" value="shape_id" name="shape_id[]" />
+<p><input name="coords[]" value="320,515,260,565,335,545" /></p>
 <p>
-<select name="" id="">
-<option value="TIP">TIP</option>
-<option value="BLOCK">BLOCK</option>
+<select name="type[]" >
+<option value="tip">TIP</option>
+<option value="block">BLOCK</option>
 </select>
 </p>
 <p>
-<textarea>Conent</textarea>
+<textarea name="content[]"></textarea>
 </p>
 <p><button class="del" type="button" data-id="shape_id">删除</button></p>
 </li>
@@ -57,10 +58,11 @@ form {
 	canvas.on('drawComplete', function(event, id, coords, allShape) {
 		var li = $('<li>');
 		li.html('<h3>' + id + '</h3>' + 
-				'<p><input value="' + coords + '"></p>' +
-				'<select name="" id=""><option value="TIP">TIP</option>' + 
-				'<option value="BLOCK">BLOCK</option></select>' + 
-				'<p><textarea>Conent</textarea></p>' + 
+				'<input type="hidden" value="' + id + '" name="shape_id[]" />' +
+				'<p><input name="coords[]" value="' + coords + '"></p>' +
+				'<select name="type[]"><option value="tip">TIP</option>' + 
+				'<option value="block">BLOCK</option></select>' + 
+				'<p><textarea name="content[]"></textarea></p>' + 
 				'<p><button class="del" type="button" data-id="' + id + '">删除</button></p>');
 		$('ul').append(li)
 	});

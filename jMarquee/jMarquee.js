@@ -196,8 +196,8 @@
 		var canvasPosition = jcanvas.data(NAMESPACE + '.pos');
 		canvasPosition = canvasPosition || jcanvas.offset();
 		jcanvas.data(NAMESPACE + '.pos', canvasPosition);
-		return [event.pageX - canvasPosition.left, 
-			event.pageY - canvasPosition.top];
+		return [Math.round(event.pageX - canvasPosition.left), 
+			Math.round(event.pageY - canvasPosition.top)];
 	};
 
 	var clickHandler = function(event) {
