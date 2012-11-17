@@ -73,7 +73,7 @@ form {
 		var target = $(event.target);
 		if (target.hasClass('del')) {
 			canvas.marquee_del(target.attr('data-id'));
-			target.parent('li').remove();
+			target.closest('li').remove();
 		}
 	});
 
