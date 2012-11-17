@@ -32,6 +32,7 @@ form {
 <p>
 <textarea>Conent</textarea>
 </p>
+<p><button class="del" type="button" data-id="shape_id">删除</button></p>
 </li>
 </ul>
 <button type="submit">Submit</button>
@@ -59,12 +60,21 @@ form {
 				'<p><input value="' + coords + '"></p>' +
 				'<select name="" id=""><option value="TIP">TIP</option>' + 
 				'<option value="BLOCK">BLOCK</option></select>' + 
-				'<p><textarea>Conent</textarea></p>');
+				'<p><textarea>Conent</textarea></p>' + 
+				'<p><button class="del" type="button" data-id="' + id + '">删除</button></p>');
 		$('ul').append(li)
 	});
 
 	canvas.on('drawError', function() {
 		alert('invalid shape')
+	});
+
+	$('form').on('click', function(event) {
+		var target = $(event.target);
+		if (target.hasClass('del')) {
+			canvas.marquee_del(target.attr('data-id'));
+			target.parent('li').remove();
+		}
 	});
 
 })(window, document);
