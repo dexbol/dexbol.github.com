@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="http://vj0.6rooms.com/csjs/lib/tools/jquery/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="jMarquee.js"></script>
+<style type="text/css">
+canvas {
+	float: left;
+}
+form {
+	float: left;
+	padding: 0 0 0 50px;
+}
+</style>
+</head>
+<body>
+<h1>jMarquee.js Example</h1>
+<canvas id="canvas" ></canvas>
+<form action="">
+<h2>Shapes</h2>
+<ul>
+<li>
+<h3>shape_id</h3>
+<p><input value="320,515,260,565,335,545" /></p>
+<p>
+<select name="" id="">
+<option value="TIP">TIP</option>
+<option value="BLOCK">BLOCK</option>
+</select>
+</p>
+<p>
+<textarea>Conent</textarea>
+</p>
+</li>
+</ul>
+<button type="submit">Submit</button>
+</form>
+<script type="text/javascript">
+;(function(win, doc) {
+	var IMAGE_SRC = 'http://www.meizitu.com/wp-content/uploads/2012a/11/29/07.jpg';
+	var IMAGE_WIDTH = 610;
+	var IMAGE_HEIGHT = 915;
+
+	var $ = jQuery;
+	var canvas = $('#canvas');
+
+	canvas.attr('width', IMAGE_WIDTH);
+	canvas.attr('height', IMAGE_HEIGHT)
+	canvas.css('background', 'url(' + IMAGE_SRC + ')');
+
+	canvas.marquee({
+		'shapeid': '320,515,260,565,335,545'
+	});
+	
+	canvas.on('drawComplete', function(event, id, coords, allShape) {
+		var li = $('<li>');
+		li.html('<h3>' + id + '</h3>' + 
+				'<p><input value="' + coords + '"></p>' +
+				'<select name="" id=""><option value="TIP">TIP</option>' + 
+				'<option value="BLOCK">BLOCK</option></select>' + 
+				'<p><textarea>Conent</textarea></p>');
+		$('ul').append(li)
+	});
+
+	canvas.on('drawError', function() {
+		alert('invalid shape')
+	});
+
+})(window, document);
+</script>
+</body>
+</html>
