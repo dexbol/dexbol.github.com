@@ -1,0 +1,17 @@
+name: "老张的不幸生活"
+author: "Zhang Kai"
+markdown: rdiscount
+highlighter: pygments
+permalink: /:year/:month/:day/:title
+
+navigations:
+  - title: Archive
+    class: fa fa-list-ul
+    href: /archive.html
+  - title: Tags
+    class: fa fa-tags
+    href: /tags.html
+  - title: About
+    class: fa fa-user
+    href: https://bio.dexbol.com
+
