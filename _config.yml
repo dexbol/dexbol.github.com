@@ -1,7 +1,7 @@
 name: "老张的不幸生活"
 author: "Zhang Kai"
 markdown: rdiscount
-highlighter: pygments
+highlighter: rouge
 permalink: /:year/:month/:day/:title
 
 navigations:
