@@ -1,6 +1,5 @@
 name: "老张的不幸生活"
 author: "Zhang Kai"
-markdown: rdiscount
 highlighter: rouge
 permalink: /:year/:month/:day/:title
 
