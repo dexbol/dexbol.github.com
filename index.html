@@ -17,7 +17,7 @@ page_name: index
 <time datetime="{{ post.date | date:"%B %d, %Y" }}">
 {{ post.date | date:"%B %d, %Y" }}
 </time>
-<p class="excerpt">{{ post.excerpt | strip_html | truncatewords: 36}}</p>
+<p class="excerpt">{{ post.excerpt | strip_html | truncate: 66}}</p>
 </a>
 {% endfor %}
 </ul>
