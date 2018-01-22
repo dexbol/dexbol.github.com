@@ -1,8 +1,6 @@
 ---
-title: 404
+title: 404 No Page Found.
 layout: page
 ---
 
-Nothing found :(
-
-But you still can have a [look around](/index.html)
+[Click me to look around](/).
