@@ -6,6 +6,3 @@ paginate: 50
 paginate_path: /blog/page:num/
 
 navigations:
-  - title: About
-    icon: 👤
-    href: /about.html
