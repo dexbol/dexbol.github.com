@@ -10,8 +10,11 @@
 <title>{{ site.name }}</title>
 {% endif %}
 <link rel="shortcut icon" href="/media/favicon.ico" />
-<link rel="stylesheet" href="/media/css/style.css" />
-<link rel="stylesheet" href="/media/css/syntax.css" />
+<link rel="stylesheet" href="/media/csjs/style.css" />
+<link rel="stylesheet" href="/media/csjs/syntax.css" />
+{% if page.mathjax %}
+{% include mathjax.html %}
+{% endif %}
 </head>
 <body>
 <div class="page page-{{page.page_name | default: layout.page_name}}">
