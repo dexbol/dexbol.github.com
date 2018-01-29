@@ -12,19 +12,22 @@ tags:
 
 列出当前已有的规则：
 
-          sudo iptables -L
+```
+sudo iptables -L
+```
 
 如果是在崭新的系统上，返回如下：
 
-          Chain INPUT (policy ACCEPT)
-          target     prot opt source          destination
+```
+Chain INPUT (policy ACCEPT)
+target     prot opt source          destination
 
-          Chain FORWORD (policy ACCEPT)
-          target     prot opt source          destination
+Chain FORWORD (policy ACCEPT)
+target     prot opt source          destination
 
-          Chain OUTPUT (policy ACCEPT)
-          target     prot opt source          destination
-
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source          destination
+```
 基本选项
 --------
 
@@ -61,18 +64,24 @@ tags:
 
 允许已建立的会话接收通信：
 
-          sudo iptables -A INPUT -m conntract --ctstate ESTABLISHED,RELATED -j ACCEPT
+```
+sudo iptables -A INPUT -m conntract --ctstate ESTABLISHED,RELATED -j ACCEPT
+```
 
 `ESTABLISHED,RELATED` 用逗号隔开的两个状态，中间不能有空格。如果上面的命令报错，说明你使用的是阉割版的 VPS（没想到 linode 的 VPS 就是阉割版的），可以使用下面的命令代替：
 
-          sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+```
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+```
 
 允许在特定端口上接收通信
 ----------------------------
 
 一般我们都使用 ssh 管理服务器，因此首先需要让 ssh 不被防火墙的阻止，ssh 默认使用 22 端口，因此我们告诉 iptables 允许在 22 端口上使用 tcp 协议的通信：
 
-          sudo iptables -A INPUT -p tcp --dport ssh -j ACCEPT
+```
+sudo iptables -A INPUT -p tcp --dport ssh -j ACCEPT
+```
 
 回顾一下上面『基本选项』列表，你就能明白这条命令让 iptables 做了什么：
 
@@ -83,25 +92,29 @@ tags:
 
 现在让我们看看当前已经应用的规则：
 
-          sudo iptables -L
-          Chain INPUT (policy ACCEPT)
-          target     prot opt source          destination
-          ACCEPT     all -- anywhere         anywhere          state RELATED,ESTABLISHED
-          ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
-
+```
+sudo iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source          destination
+ACCEPT     all -- anywhere         anywhere          state RELATED,ESTABLISHED
+     ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
+```
 下面允许 80 端口：
 
-          sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+```
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+```
 
 再次查看：
 
-          sudo iptables -L
-          Chain INPUT (policy ACCEPT)
-          target     prot opt source          destination
-          ACCEPT     all -- anywhere         anywhere          state RELATED,ESTABLISHED
-          ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
-          ACCEPT     tcp -- anywhere          anywhere          tcp dpt:www
-
+```
+sudo iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source          destination
+ACCEPT     all -- anywhere          anywhere          state RELATED,ESTABLISHED
+ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
+ACCEPT     tcp -- anywhere          anywhere          tcp dpt:www
+```
 我们已经允许了在 ssh 和 web 端口上接收通信，但现在还没有阻止什么，因此目前所有的通信依然可以到达服务器。
 
 阻止通信
@@ -109,50 +122,56 @@ tags:
 
 一旦数据包被某条规则接受(accept)，它就不会再受到接下来的规则影响。因为我们上面已经允许了 ssh 和 web 端口，在后面再添加一条忽略所有数据包的规则后，web 和 ssh 并不会因此受影响。
 
-          sudo iptables -A INPUT -j DROP
-          sudo iptables -L
-          Chain INPUT (policy ACCEPT)
-          target     prot opt source          destination
-          ACCEPT     all -- anywhere         anywhere          state RELATED,ESTABLISHED
-          ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
-          ACCEPT     tcp -- anywhere          anywhere          tcp dpt:www
-          DROP       all -- anywhere
+```
+sudo iptables -A INPUT -j DROP
+sudo iptables -L
 
+Chain INPUT (policy ACCEPT)
+target     prot opt source          destination
+ACCEPT     all -- anywhere         anywhere          state RELATED,ESTABLISHED
+ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
+ACCEPT     tcp -- anywhere          anywhere          tcp dpt:www
+DROP       all -- anywhere
+```
 由于上面的命令没有指定网络接口和协议，因此除了 ssh 和 web 外任何网络接口以及任何端口上的通信都将被阻止。
 
 编辑 iptables
 --------------
 
 目前的问题是上面阻止通信的规则杀伤力太大，由于没有指定网络接口，因此经过本地接口的通信也会被阻止，比如在同一台机器上应用程序通过 TCP 连接 mysql 数据库。然而我们现在再添加一条允许本地接口通信的规则已经为时已晚，因为上一条规则已经忽略了数据包并停止应用接下来的规则。解决办法就是使用 `-I` 把规则插入到规则链的顶部。
-
-          sudo iptables -I INPUT 1 -i lo -j ACCEPT
-          sudo iptables -L
-          Chain INPUT (policy ACCEPT)
-          target     prot opt source          destination
-          ACCEPT     all -- anywhere
-          ACCEPT     all -- anywhere         anywhere          state RELATED,ESTABLISHED
-          ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
-          ACCEPT     tcp -- anywhere          anywhere          tcp dpt:www
-          DROP       all -- anywhere
-
+```
+sudo iptables -I INPUT 1 -i lo -j ACCEPT
+sudo iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source          destination
+ACCEPT     all -- anywhere
+ACCEPT     all -- anywhere         anywhere          state RELATED,ESTABLISHED
+ACCEPT     tcp -- anywhere          anywhere          tcp dpt:ssh
+ACCEPT     tcp -- anywhere          anywhere          tcp dpt:www
+DROP       all -- anywhere
+```
 可以看到目前的规则链中，第一条与最后一条很相似，为了查看更多的详细信息可以这样：
 
-          sudo iptables -L -v
+```
+sudo iptables -L -v
 
-          Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
-          pkts bytes target     prot opt in     out     source               destination
-          0     0 ACCEPT     all  --  lo     any     anywhere             anywhere
-          0     0 ACCEPT     all  --  any    any     anywhere             anywhere            state RELATED,ESTABLISHED
-          0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:ssh
-          0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:www
-          0     0 DROP       all  --  any    any     anywhere             anywhere
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+pkts bytes target     prot opt in     out     source               destination
+0     0 ACCEPT     all  --  lo     any     anywhere             anywhere
+0     0 ACCEPT     all  --  any    any     anywhere             anywhere            state RELATED,ESTABLISHED
+0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:ssh
+0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:www
+0     0 DROP       all  --  any    any     anywhere             anywhere
+```
 
 记录日志
 --------
 
 如果你想记录一下有哪些通信被抛弃，可以执行：
 
-          sudo iptables -I INPUT 5 -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
+```
+sudo iptables -I INPUT 5 -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
+```
 
 前面已经介绍过插入规则的选项，所以我们从 -m limit 开始说起：
 
@@ -165,14 +184,17 @@ tags:
 --------
 
 假如我现在重启服务器，我们上面添加的规则将会全部丢失。为了避免每次都要重新添加的麻烦，可以将规则保存到一个文件中，然后每当服务器重启后自动添加文件中的规则。有多种方法可以达到这个目的，这里只说一种。首先保存当前的规则到一个文件：
-
-          sudo iptables-save > /etc/iptables.rules
-
+```
+sudo iptables-save > /etc/iptables.rules
+```
 然后在 `/etc/network/if-pre-up.d` 添加一个文件，比如 iptables，内容如下:
 
-          #!/bin/sh
-          iptables-restore < /etc/iptables.rules
-
+```
+#!/bin/sh
+iptables-restore < /etc/iptables.rules
+```
 最后，将此文件设为可执行文件：
 
-          chmod +x /etc/network/if-pre-up.d/iptables
+```
+chmod +x /etc/network/if-pre-up.d/iptables
+```

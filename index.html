@@ -22,6 +22,7 @@ page_name: index
 {% endfor %}
 </ul>
 
+{% if paginator.previous_page or paginator.next_page %}
 <div class="pagination">
 {% if paginator.previous_page %}
 <a href="{{ paginator.previous_page_path }}" class="previous">⟵Previous</a>
@@ -34,3 +35,4 @@ page_name: index
 <span class="next ">Next⟶</span>
 {% endif %}
 </div>
+{% endif %}

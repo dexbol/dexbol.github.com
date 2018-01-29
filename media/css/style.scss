@@ -1,10 +1,9 @@
 ---
 ---
 
-$font: "PingFang SC", "Lantinghei SC", "Microsoft Yahei", "Hiragino Sans GB", "Microsoft Sans Serif", "WenQuanYi Micro Hei", sans-serif;
-$monospace: "Source Code Pro", monospace;
-$label-font: "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-$background-color: #f9f9f9;
+$font: "PingFang SC", "Lantinghei SC", "Microsoft Yahei", "Hiragino Sans GB", "Microsoft Sans Serif", "WenQuanYi Micro Hei", "Noto Sans SC", sans-serif;
+$monospace: "Source Code Pro", Courier, 'Courier New', monospace;
+$highlight-color: #999;
 
 @mixin min-screen($res) {
     @media screen and (min-width: $res) {
@@ -12,7 +11,7 @@ $background-color: #f9f9f9;
     }
 }
 
-@mixin page-width($is_wide: false) {
+@mixin content-width($is_wide: false) {
     @include min-screen(320px) {
         width: 300px;
     }
@@ -36,83 +35,74 @@ $background-color: #f9f9f9;
 }
 
 body {
-    font-size: 14px;
-    font-family: #{$font};
-    font-weight: 300;
+    padding: 0;
+    margin: 0;
+    font: 300 1em/1.8 #{$font};
     color: #555;
-    background-color: $background-color;
+    background-color: #FEFEFE;
     -webkit-font-smoothing: antialiased;
 }
+
 ::selection {
-    color: #fff;
+    color: #FFF;
     background-color: #333;
 }
-a {
-    color: #555;
-    text-decoration: none;
-}
-blockquote {
-    background-color: #f8f8f8;
-    padding: 0 1em;
-    border: 1px dashed #eee !important;
-    border-color: #e0e0e0 !important;
-    font-size: 13px;
-    line-height: 1.6;
-    display: block;
-    overflow: auto;
-}
-pre code {
-    @extend blockquote;
-    padding: 1em;
-    font-weight: 500;
-}
-code {
-    background-color: #f8f8f8;
-    padding: 2px 5px;
-    border: 1px dashed #e0e0e0;
-    font-family: #{$monospace};
-}
-h1, h2 {
-    font-size: 1.4em;
-}
-header {
-    display: flex;
-    margin: 3em auto 2em;
-    position: relative;
 
-    h1 {
-        flex: 1;
-        font-family: #{$label-font};
-        a {
-            @extend a;
-            color: #a9a9a9;
-            display: block;
-        }
-    }
-
-    nav {
-        display: inline-block;
-        position: relative;
-        top: 1em;
-        span {
-            margin: .5em;
-        }
-        a {
-            font-family: #{$label-font};
-            color: #ccc;
-        }
-    }
-}
 .page {
-    @include page-width();
-    margin: 0 auto;
-}
-.page-index {
-    @include page-width(true);
-    header {
-        @include page-width(true);
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    .content, header {
+        margin: 0 auto;
+        @include content-width();
     }
 }
+
+.page-index {
+    .content, header {
+        @include content-width(true);
+    }
+}
+
+.header {
+    width: 100%;
+    height: 2.5em;
+    margin: 0 0 2.6em 0;
+    background: #EFEFEF;
+
+    header {
+        display: flex;
+        height: 100%;
+        margin: 0 auto;
+        align-items: center;
+
+        h1 {
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            font-size: 1em;
+            font-weight: 100;
+            text-shadow: 1px 1px rgba(255, 255, 255, 1);
+
+            a {
+                display: block;
+                text-decoration: none;
+                color: #999;
+            }
+        }
+
+        nav {
+            span {
+                margin: .5em;
+            }
+            a {
+                color: #ccc;
+            }
+        }
+    }
+}
+
 ul.listing {
     display: flex;
     flex-wrap: wrap;
@@ -124,17 +114,24 @@ ul.listing {
         width: 100%;
         list-style-type:none;
         padding: 0;
-        font-weight: 300;
+        text-decoration: none;
+        color: #555;
 
         h1 {
-            color: #463636;
-            text-align: center;
             padding: 1em 0 0 0;
             margin: 0;
+            color: #463636;
+            font-size: 1.1em;
+            font-weight: 300;
+            text-align: center;
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
         }
         time {
             display: block;
-            padding: .5em 0;
+            padding: 0.5em 0;
+            font-size: 0.9em;
             color: #999;
             text-align: center;
             text-transform: uppercase;
@@ -153,11 +150,13 @@ ul.listing {
             background: #999;
             color: #666;
             font-size: 120px;
-            text-align: center
+            text-align: center;
+            text-transform: uppercase;
         }
         .excerpt {
             margin: 0;
             padding: 0 0 2.5em 0;
+            font-size: .88em;
         }
         @include min-screen(660px) {
             width: 310px;
@@ -191,11 +190,74 @@ ul.listing {
 
 article {
     margin: 2em 0;
+
+    a {
+        color: #555;
+        border-bottom: 1px solid $highlight-color;
+        text-decoration: none;
+    }
+    img {
+        max-width: 100%;
+        border: 0;
+    }
+    blockquote {
+        display: block;
+        border-left: 1px solid $highlight-color;
+        padding: 0 0 0 1em;
+        margin: 1em 3em 1.2em 2em;
+        position: relative;
+        color: #999;
+    }
+    pre {
+        display: block;
+        border: 1px dotted #EEE;
+        padding: 1em;
+        font-size: .91em;
+        font-weight: 400;
+        line-height: 1.6;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        code {
+            padding: 0;
+        }
+    }
+    code {
+        padding: 2px 5px;
+        font-family: #{$monospace};
+    }
+    h1, h2, h3, h4, h5, h6 {
+        padding: 0;
+        margin: 1.2em 0 0.6em 0;
+        color: #000;
+        line-height: 1.35;
+        font-weight: 100;
+        font-size: 1em;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.8em;
+    }
+    h3 {
+        font-size: 1.6em;
+    }
+    h4 {
+        font-size: 1.4em;
+    }
+    ul, ol {
+        padding: 0;
+        margin: 0 0 1.2em 1.3em;
+        list-style: disc;
+    }
+    ol {
+        list-style: decimal;
+    }
     p {
-        padding: .7em 0;
+        padding: 0;
+        margin: 0 0 1.2em 0;
     }
     .title {
-        font-family: #{$label-font};
         a {
             color: #777;
         }
@@ -203,26 +265,16 @@ article {
     .meta {
         display: block;
         overflow: auto;
-        margin-top: -.5em;
+        margin: -0.5em 0 2.2em 0;
         font-size: .9em;
         .tags {
             color: #999999;
             padding: .25em;
         }
     }
-    .post {
-        a {
-            text-decoration: underline dotted;
-        }
-        img {
-            max-width: 100%;
-            display: block;
-            margin: .5em auto;
-        }
-    }
     .relative {
-        margin: 2em 0;
-        font-size: 1em;
+        padding: 0;
+        margin: 3em 0 2em 0;
         z-index: 1;
         overflow: hidden;
         text-align: center;
@@ -251,12 +303,9 @@ article {
             font-size: 18px;
 
             a {
-                font-family: #{$label-font};
                 font-size: 14px;
                 color: #999999;
-                &:hover {
-                    color: #bb2222 !important;
-                }
+                border: 0;
             }
         }
     }
@@ -265,7 +314,6 @@ article {
 footer {
     display: block;
     color: #909090;
-    font-family: #{$label-font};
     font-size: .9em;
     text-align: center;
     margin: 1em auto;

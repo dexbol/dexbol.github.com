@@ -15,6 +15,7 @@
 </head>
 <body>
 <div class="page page-{{page.page_name | default: layout.page_name}}">
+<div class="header">
 <header>
 <h1><a title="{{ site.name }}" href="/">{{ site.name }}</a></h1>
 <nav>
@@ -27,7 +28,8 @@
 {% endfor %}
 </nav>
 </header>
-<div id="content">
+</div>
+<div class="content">
 {{ content }}
 </div>
 <footer>
