@@ -9,9 +9,9 @@
 {% else %}
 <title>{{ site.name }}</title>
 {% endif %}
-<link rel="shortcut icon" href="/media/favicon.ico" />
-<link rel="stylesheet" href="/media/csjs/style.css" />
-<link rel="stylesheet" href="/media/csjs/syntax.css" />
+<link rel="shortcut icon" href="/ass/favicon.ico" />
+<link rel="stylesheet" href="/ass/csjs/style.css" />
+<link rel="stylesheet" href="/ass/csjs/syntax.css" />
 {% if page.mathjax %}
 {% include mathjax.html %}
 {% endif %}
@@ -20,7 +20,11 @@
 <div class="page page-{{page.page_name | default: layout.page_name}}">
 <div class="header">
 <header>
-<h1><a title="{{ site.name }}" href="/">{{ site.name }}</a></h1>
+<h1>
+<a title="{{ site.name }}" href="/">
+<img src="/ass/img/logo.svg" />    
+</a>
+</h1>
 <nav>
 {% for nav in site.navigations %}
 <span>
@@ -36,8 +40,7 @@
 {{ content }}
 </div>
 <footer>
-powered by jekyll | themed by
-<a href="http://anyilive.com/">AnyiLive</a>
+powered by jekyll
 </footer>
 </div>
 </body>

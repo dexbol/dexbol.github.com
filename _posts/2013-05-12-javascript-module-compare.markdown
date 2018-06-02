@@ -47,10 +47,12 @@ Externally Defined Dependencies
 内定义文件之前的依赖关系，比如在一个 package 中包含一个配置
 文件定义 package 内所有文件的依赖关系：
 
-     {
-          '/MyDependentModule.js': ['/lib/StandAloneModule.js'],
-          '/lib/StanAloneMdule.js': []
-     }
+``` javascript
+{
+     '/MyDependentModule.js': ['/lib/StandAloneModule.js'],
+     '/lib/StanAloneMdule.js': []
+}
+```
 
 加载器会首先加载这个配置文件，然后根据依赖关系按需加载文件。
 这种模式比起传统模式可以更轻松的管理文件和执行顺序，但当
@@ -62,11 +64,13 @@ Inferred Dependencies
 推断依赖关系。通过静态解析代码推断全局变量进一步生成
 依赖关系图。
 
-     var MyGolableModule = (function() {
-          var imported = MyOtherModule;
-          ...
-          return exports;
-     })();
+```javascript
+var MyGolableModule = (function() {
+     var imported = MyOtherModule;
+     ...
+     return exports;
+})();
+```
 
 像上面的代码，我们可以推断 `MyOtherModule` 是一个全局变量，
 既然这里没有定义这个变量说明它是在其他模块中定义的。
@@ -88,12 +92,14 @@ Comment Defined Dependencies
 系写到注释中，这样不但降低了编译工具的开发难度，而且更方便
 在浏览器中解析。
 
-     // @requires /lib/MyOtherModule.js
-     var MyGlobalModule = (function() {
-          var imported = MyOtherModule;
-          ...
-          return exports;
-     })();
+```javascript
+// @requires /lib/MyOtherModule.js
+var MyGlobalModule = (function() {
+     var imported = MyOtherModule;
+     ...
+     return exports;
+})();
+```
 
 在浏览器中，加载器可以先通过 XHR 加载文件，解析注释生成依赖关系图后
 通过将代码注入到 script 标签内执行。
@@ -108,9 +114,11 @@ exports 属性共享变量。在模块内可以使用全局函数 `requires`
 引入其他模块文件，`requires` 函数接受一个模块文件名做为
 参数。
 
-     var imported = requires('lib/MyOtherModule');
-     ...
-     exports.MyExport = ...;
+```javascript
+var imported = requires('lib/MyOtherModule');
+// ...
+exports.MyExport = ...;
+```
 
 上面的代码可以在 Node.js 或与之兼容的环境下运行。如果
 需要在浏览器端使用则需要加载器通过 XHR 加载文件内容，然
@@ -127,10 +135,12 @@ CommonJS API 否则使用传统模式。
 Define Block
 ------------
 
-     define(function(require, exports, module) {
-          var imported = require('lib/MyOtherModule');
-          exports.myExport = ...;
-     });
+```javascript
+define(function(require, exports, module) {
+     var imported = require('lib/MyOtherModule');
+     exports.myExport = ...;
+});
+```
 
 通过 `define()` 包裹后便可以异步执行代码了。不过在代码
 执行之前无法获得模块的依赖关系，因此在浏览器中需
@@ -147,10 +157,12 @@ Asynchronous Module Definition (AMD)
 异步模块定义。它结合模块分离，定义依赖语法，加载器
 为一体。从而更加方便在浏览器中使用。
 
-     define(['MyOtherModule'], function(imported) {
-          ...
-          return exports;
-     });
+```javascript
+define(['MyOtherModule'], function(imported) {
+     // ...
+     return exports;
+});
+```
 
 使用 AMD 模式的加载器比其他加载器效率都要高，因为它
 不需要解析代码生成依赖关系图。当然 Externally Defined
@@ -166,9 +178,11 @@ ECMAScript.Next Modules
 
 ECMAScript.Next 定义了新的语法用来定义模块。
 
-     moudle importedModule from 'MyOtherModule.js'
-     ...
-     export myExport;
+```javascript
+moudle importedModule from 'MyOtherModule.js'
+// ...
+export myExport;
+```
 
 与 CommonJS 类似，加载器需要先解析代码内容，重新生成后
 注入 script 标签内执行。
