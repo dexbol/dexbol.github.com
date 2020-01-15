@@ -7,7 +7,7 @@ page_name: index
 {% for post in paginator.posts %}
 <a class="listing-item" href="{{ post.url }}" title="{{ post.title }}">
 {% if post.thumb %}
-<b class="thumb" style="background-image: url({{ post.thumb | absolute_url}})"></b>
+<b class="thumb" style="background-image: url({{ post.thumb | relative_url}})"></b>
 {% else %}
 <b class="thumb letter">
 {{ post.title | truncate: 1,"" }}
