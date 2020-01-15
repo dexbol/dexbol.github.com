@@ -11,29 +11,6 @@ $highlight-color: #999;
     }
 }
 
-@mixin content-width($is_wide: false) {
-    @include min-screen(320px) {
-        width: 300px;
-    }
-    @include min-screen(375px) {
-        width: 350px;
-    }
-    @include min-screen(414px) {
-        width: 400px;
-    }
-    @include min-screen(660px) {
-        width: 660px;
-    }
-    @if ($is_wide) {
-        @include min-screen(990px) {
-            width: 990px;
-        }
-        @include min-screen(1320px) {
-            width: 1320px;
-        }
-    }
-}
-
 body {
     padding: 0;
     margin: 0;
@@ -53,14 +30,15 @@ body {
     padding: 0;
     margin: 0;
     .content, header {
+        max-width: 660px;
+        padding: 0 2em;
         margin: 0 auto;
-        @include content-width();
     }
 }
 
 .page-index {
     .content, header {
-        @include content-width(true);
+        max-width: 1320px;
     }
 }
 
@@ -140,13 +118,13 @@ ul.listing {
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-        }
-        .thumb.letter {
-            background: #999;
-            color: #666;
-            font-size: 120px;
-            text-align: center;
-            text-transform: uppercase;
+            &.letter {
+                background: #999;
+                color: #666;
+                font-size: 120px;
+                text-align: center;
+                text-transform: uppercase;
+            }
         }
         .excerpt {
             margin: 0;
@@ -154,13 +132,6 @@ ul.listing {
             font-size: .88em;
         }
         @include min-screen(660px) {
-            width: 310px;
-            .thumb {
-                height: 310px;
-                line-height: 310px;
-            }
-        }
-        @include min-screen(990px) {
             width: 300px;
             .thumb {
                 height: 300px;
@@ -184,8 +155,6 @@ ul.listing {
 }
 
 article {
-    margin: 2em 0;
-
     a {
         color: #555;
         border-bottom: 1px solid $highlight-color;

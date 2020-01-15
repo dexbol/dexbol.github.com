@@ -7,7 +7,7 @@
 {% if page.title %}
 <title>{{ page.title }}</title>
 {% else %}
-<title>{{ site.name }}</title>
+<title>{{ site.title }}</title>
 {% endif %}
 <link rel="shortcut icon" href="/ass/favicon.ico" />
 <link rel="stylesheet" href="/ass/csjs/style.css" />
@@ -21,7 +21,7 @@
 <div class="header">
 <header>
 <h1>
-<a title="{{ site.name }}" href="/">
+<a title="{{ site.title }}" href="/">
 <img src="/ass/img/logo.svg" />    
 </a>
 </h1>
@@ -40,7 +40,7 @@
 {{ content }}
 </div>
 <footer>
-powered by jekyll
+Proudly Powered By Github Pages
 </footer>
 </div>
 </body>

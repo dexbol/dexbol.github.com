@@ -20,6 +20,11 @@ page_name: post
 {% endif %}
 </section>
 <section class="post">
+{% if page.thumb %}
+<div class="thumb">
+<img src="{{ page.thumb }}" title="{{ page.title }}" />
+</div>
+{% endif %}
 {{ content }}
 </section>
 <div class="relative">

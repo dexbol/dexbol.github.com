@@ -19,7 +19,7 @@ asyncio。asyncio 在 Python 3.4 中也正式成为了标准库的一员。
 但是多线程会让程序更复杂，并带来一些问题，比如：死锁，竞态条件，资源枯竭。
 
 ## 上下文切换
-异步编程可以避免上述所有问题，事实上，异步编程是为了解决另外一个问题而设计的：
+异步编程可以避免上述堵塞的问题，事实上，异步编程是为了解决另外一个问题而设计的：
 CPU Context Switching，CPU 的上下文切换。当使用多线程时，每个 CPU
 内核同一时间依然只能处理一个线程，为了让所有线程共享资源，
 CPU 会不定期的保存当前线程的上下文环境，
@@ -68,7 +68,7 @@ jobs = [gevent.spawn(print_head, _url) for _url in urls]
 ```
 Gevent 的 API 很像传统线程，但内部却使用运行在事件环（event loop）
 上的协同程序（coroutine）实现。这意味着你可以得到轻量进程
-（light-weight threading）的好处，但又不需要了解协同程序。
+（light-weight process）的好处，但又不需要了解协同程序。
 Gevent 适合熟悉线程又想使用
 [轻量进程](https://en.wikipedia.org/wiki/Light-weight_process)的程序员。
 
@@ -117,7 +117,7 @@ for url in urls:
 如果回调函数中出现了异常，调用栈只有事件列队和回调函数，我们的代码无法捕捉这个错误。
 因此只能把错误信息赋值到 response 对象上，而不是直接抛出。
 熟悉 golang 的人对这种方式司空见惯，
-就好像是语言的强制要求的，同时这也是 golang 最被诟病的一方便。
+就好像是语言的强制要求的，同时这也是 golang 最被诟病的一方面。
 
 ![callback hell](/ass/img/callback.jpg)
 
@@ -149,7 +149,7 @@ for url in urls:
 - 多层嵌套的回调函数不容易调试。
 
 ## 那应该怎么办呢？
-在 python 3.3 之前上面两种异步编程的方式已经式最好的了，
+在 python 3.3 之前上面两种异步编程的方式已经是最好的了，
 想得到更好的方式就必须需要语言的支持了。
 Python 需要某种方式可以先执行函数的某一部分，然后停止，同时可以保存调用栈，
 进而可以抛出异常。如果你熟悉 python 一定会想到生成器（Generator）。

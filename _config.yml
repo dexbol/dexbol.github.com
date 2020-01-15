@@ -1,4 +1,5 @@
-name: "老张的不幸生活"
+name: "老张"
+title: "老张的碎碎念"
 author: "Zhang Kai"
 highlighter: rouge
 permalink: /:year/:month/:day/:title
