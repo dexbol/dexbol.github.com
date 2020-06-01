@@ -67,6 +67,7 @@
             function count() {
                 seconds--;
                 digitalNode.innerHTML = format(Math.abs(seconds));
+                digitalNode.style.color = seconds >= 0 ? '#333' : '#999';
                 timer = setTimeout(count, 1000);
 
                 if (seconds == 0) {
