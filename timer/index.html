@@ -84,12 +84,21 @@
                 digitalNode.style.color = seconds > 0 ? '#333' : '#999';
                 timer = setTimeout(count, 1000);
 
-                if (seconds <= 0 && !notified) {
-                    new Notification('Time Out', {
-                        icon: './tomato.png'
-                    });
-                    notified = true;
+                if (seconds <= 0 && !notified && Math.max(seconds % 5) == 0) {
+                    notify();
                 }
+            }
+
+            function notify() {
+                var notice = new Notification('Time Out', {
+                    icon: './tomato.png'
+                });
+                notice.addEventListener('close', stopNotify);
+                notice.addEventListener('click', stopNotify);
+            }
+
+            function stopNotify() {
+                notified = true;
             }
 
             document
