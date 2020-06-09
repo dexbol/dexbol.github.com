@@ -28,20 +28,80 @@
                 color: #333;
             }
             .container {
-                width: 40vw;
+                width: 50vw;
                 margin: 4vw auto 0;
             }
             .digital {
-                font-size: 10vw;
+                display: flex;
+                align-items: center;
+                font-size: 9.2vw;
                 text-align: center;
             }
-            button {
+            .digital i {
+                display: block;
+                width: 9.2vw;
+                text-align: center;
+            }
+            .container button {
                 display: block;
                 width: 18vw;
                 height: 4vw;
                 margin: 4vw auto 0;
                 font-size: 2vw;
                 text-transform: uppercase;
+                font-family: inherit;
+            }
+            .confirm {
+                width: 44vw;
+                border-radius: 4vw;
+                background: white;
+                box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+                position: absolute;
+                top: 18vw;
+                left: 50%;
+                margin-left: -20vw;
+                display: none;
+            }
+            .confirm p {
+                padding: 4vw;
+                margin: 0;
+                text-align: center;
+                font-size: 2.6vw;
+            }
+            .confirm .btn {
+                padding: 3vw;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+            }
+            .confirm .btn button {
+                display: block;
+                padding: 0.3vw 1vw;
+                font-size: 2vw;
+                font-family: inherit;
+            }
+            .today {
+                padding: 2vw 0;
+                margin: 0;
+                text-align: center;
+                font-size: 1.2vw;
+            }
+            .history {
+                padding: 2vw 0 0 0;
+                margin: 0;
+                list-style: none;
+                font-size: 1.2vw;
+            }
+            .history li {
+                height: 6vw;
+                padding: 0 2vw;
+                margin: 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .history li:nth-child(odd) {
+                background: #efefef;
             }
         </style>
     </head>
@@ -51,27 +111,55 @@
             <div class="panel">
                 <button>Start</button>
             </div>
+            <div class="today"></div>
+            <div class="history"></div>
+        </div>
+        <div class="confirm">
+            <p>Would you save the 🍅 ?</p>
+            <div class="btn">
+                <button>Discard</button>
+                <button>Save</button>
+            </div>
         </div>
         <script type="text/javascript">
+            const DURATION = 25 * 60 * 1000;
+            const TODAY = getTodayString();
+
             var digitalNode = document.querySelector('.digital');
+            var confirmNode = document.querySelector('.confirm');
             var endTime = 0;
-            var notified = false;
+            var notified = 0;
             var timer = null;
+
+            function getTodayString() {
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+
+                return (
+                    year +
+                    '-' +
+                    (month < 10 ? '0' + month : month) +
+                    '-' +
+                    (day < 10 ? '0' + day : day)
+                );
+            }
 
             function format(s) {
                 var minutes = Math.floor(s / 60);
                 var sec = s % 60;
-
-                return (
+                var str =
                     (minutes < 10 ? '0' + minutes : minutes) +
                     ':' +
-                    (sec < 10 ? '0' + sec : sec)
-                );
+                    (sec < 10 ? '0' + sec : sec);
+
+                return '<i>' + str.split('').join('</i><i>') + '</i>';
             }
 
             function start() {
-                endTime = Date.now() + 25 * 60 * 1000;
-                notified = false;
+                endTime = Date.now() + DURATION;
+                notified = 0;
                 clearTimeout(timer);
                 timer = setTimeout(count, 1000);
             }
@@ -84,12 +172,17 @@
                 digitalNode.style.color = seconds > 0 ? '#333' : '#999';
                 timer = setTimeout(count, 1000);
 
-                if (seconds <= 0 && !notified && Math.max(seconds % 5) == 0) {
+                if (
+                    seconds <= 0 &&
+                    notified < 18 &&
+                    Math.max(seconds % 6) == 0
+                ) {
                     notify();
                 }
             }
 
             function notify() {
+                notified++;
                 var notice = new Notification('Time Out', {
                     icon: './tomato.png'
                 });
@@ -98,9 +191,76 @@
             }
 
             function stopNotify() {
-                notified = true;
+                showConfirm();
+                notified = Infinity;
             }
 
+            function showConfirm() {
+                confirmNode.style.display = 'block';
+            }
+
+            function hideConfirm() {
+                confirmNode.style.display = 'none';
+            }
+
+            function saveTomato() {
+                var now = Number(localStorage.getItem(TODAY) || '');
+
+                localStorage.setItem(TODAY, String(++now));
+            }
+
+            function refreshTodayTomato() {
+                var count = Number(localStorage.getItem(TODAY) || '');
+
+                document.querySelector('.today').innerHTML =
+                    new Date().toDateString() +
+                    '<br />' +
+                    (count > 0
+                        ? new Array(count).fill('🍅').join('  ') +
+                          ' x<span>' +
+                          count +
+                          '</span>'
+                        : '');
+            }
+
+            function showHistory() {
+                var list = Object.keys(localStorage).map((k) => [
+                    k,
+                    localStorage.getItem(k)
+                ]);
+
+                list.sort(
+                    (a, b) =>
+                        Number(b[0].replace(/-/g, '')) -
+                        Number(a[0].replace(/-/g, ''))
+                );
+
+                document.querySelector('.history').innerHTML = list
+                    .map((i) => {
+                        return `<li>
+                        <span>${i[0]}</span>
+                        <span>🍅 x ${i[1]}</span>
+                        </li>`;
+                    })
+                    .join('\n');
+            }
+
+            confirmNode.addEventListener('click', function (event) {
+                var target = event.target;
+
+                if (target.nodeName.toLowerCase() == 'button') {
+                    if (target.innerText.toLowerCase() == 'save') {
+                        saveTomato();
+                        refreshTodayTomato();
+                    }
+                    hideConfirm();
+                }
+            });
+            document
+                .querySelector('.today')
+                .addEventListener('click', function (event) {
+                    showHistory();
+                });
             document
                 .querySelector('button')
                 .addEventListener('click', function (event) {
@@ -112,6 +272,7 @@
                 });
 
             digitalNode.innerHTML = format(0);
+            refreshTodayTomato();
 
             if ('serviceWorker' in navigator && typeof caches == 'object') {
                 navigator.serviceWorker.register('./sw.js');
