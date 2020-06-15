@@ -100,6 +100,9 @@
                 justify-content: space-between;
                 align-items: center;
             }
+            .history li span {
+                padding-left: 2vw;
+            }
             .history li:nth-child(odd) {
                 background: #efefef;
             }
@@ -109,7 +112,7 @@
         <div class="container">
             <div class="digital"></div>
             <div class="panel">
-                <button>Start</button>
+                <button class="the-button">Start</button>
             </div>
             <div class="today"></div>
             <div class="history"></div>
@@ -127,9 +130,18 @@
 
             var digitalNode = document.querySelector('.digital');
             var confirmNode = document.querySelector('.confirm');
-            var endTime = 0;
-            var notified = 0;
+            var theButtonNode = document.querySelector('.the-button');
+            var historyNode = document.querySelector('.history');
             var timer = null;
+            var currentPomodoro = null;
+
+            function getPomodoro(endTime) {
+                return {
+                    endTime: endTime,
+                    notified: 0,
+                    interruption: []
+                };
+            }
 
             function getTodayString() {
                 var date = new Date();
@@ -158,13 +170,14 @@
             }
 
             function start() {
-                endTime = Date.now() + DURATION;
-                notified = 0;
+                currentPomodoro = getPomodoro(Date.now() + DURATION);
                 clearTimeout(timer);
-                timer = setTimeout(count, 1000);
+                theButtonNode.innerText = 'interrupt';
+                count();
             }
 
             function count() {
+                var {endTime, notified} = currentPomodoro;
                 var now = Date.now();
                 var seconds = Math.round((endTime - now) / 1000);
 
@@ -175,24 +188,25 @@
                 if (
                     seconds <= 0 &&
                     notified < 18 &&
-                    Math.max(seconds % 6) == 0
+                    Math.max(seconds % 12) == 0
                 ) {
                     notify();
                 }
             }
 
+            function stop() {
+                currentPomodoro.notified = Infinity;
+                theButtonNode.innerText = 'start';
+                showConfirm();
+            }
+
             function notify() {
-                notified++;
+                currentPomodoro.notified++;
                 var notice = new Notification('Time Out', {
                     icon: './tomato.png'
                 });
-                notice.addEventListener('close', stopNotify);
-                notice.addEventListener('click', stopNotify);
-            }
-
-            function stopNotify() {
-                showConfirm();
-                notified = Infinity;
+                notice.addEventListener('close', stop);
+                notice.addEventListener('click', stop);
             }
 
             function showConfirm() {
@@ -203,16 +217,35 @@
                 confirmNode.style.display = 'none';
             }
 
-            function saveTomato() {
-                var now = Number(localStorage.getItem(TODAY) || '');
+            function getTodayData() {
+                var todayData = localStorage.getItem(TODAY) || '';
 
-                localStorage.setItem(TODAY, String(++now));
+                try {
+                    todayData = JSON.parse(todayData);
+                } catch (e) {
+                    todayData = [];
+                }
+                return todayData;
+            }
+
+            function saveTomato() {
+                var todayData = getTodayData();
+                localStorage.setItem(
+                    TODAY,
+                    JSON.stringify(todayData.concat([currentPomodoro]))
+                );
             }
 
             function refreshTodayTomato() {
-                var count = Number(localStorage.getItem(TODAY) || '');
+                var todayData = getTodayData();
+                var count = todayData.length;
+                var node = document.querySelector('.today');
+                var interruption = todayData.reduce((ac, i) => {
+                    return ac.concat(i.interruption);
+                }, []);
 
-                document.querySelector('.today').innerHTML =
+                node.title = interruption.reverse().join('\n');
+                node.innerHTML =
                     new Date().toDateString() +
                     '<br />' +
                     (count > 0
@@ -226,7 +259,7 @@
             function showHistory() {
                 var list = Object.keys(localStorage).map((k) => [
                     k,
-                    localStorage.getItem(k)
+                    JSON.parse(localStorage.getItem(k))
                 ]);
 
                 list.sort(
@@ -235,11 +268,27 @@
                         Number(a[0].replace(/-/g, ''))
                 );
 
-                document.querySelector('.history').innerHTML = list
+                historyNode.style.display = 'block';
+                historyNode.innerHTML = list
                     .map((i) => {
-                        return `<li>
-                        <span>${i[0]}</span>
-                        <span>🍅 x ${i[1]}</span>
+                        var [date, tomatoes] = i;
+                        var interruption = tomatoes.reduce((ac, i) => {
+                            return ac.concat(i.interruption);
+                        }, []);
+                        var title = '';
+                        var eggplant = '';
+
+                        if (interruption.length > 0) {
+                            title = interruption.reverse().join('\n');
+                            eggplant =
+                                '<span>🍆 x' + interruption.length + '</span>';
+                        }
+                        return `<li title="${title}">
+                        <p>${date}</p>
+                        <p>
+                            🍅 x ${tomatoes.length}
+                            ${eggplant}
+                        </p>
                         </li>`;
                     })
                     .join('\n');
@@ -259,17 +308,27 @@
             document
                 .querySelector('.today')
                 .addEventListener('click', function (event) {
-                    showHistory();
+                    if (historyNode.style.display == 'block') {
+                        historyNode.style.display = 'none';
+                    } else {
+                        showHistory();
+                    }
                 });
-            document
-                .querySelector('button')
-                .addEventListener('click', function (event) {
+
+            theButtonNode.addEventListener('click', function (event) {
+                var target = event.currentTarget;
+                var interruption;
+
+                if (target.innerText.toLowerCase() == 'start') {
                     Notification.requestPermission().then(start, function (
                         err
                     ) {
                         alert(err.toString());
                     });
-                });
+                } else if ((interruption = prompt('What interrupt you?'))) {
+                    currentPomodoro.interruption.push(interruption);
+                }
+            });
 
             digitalNode.innerHTML = format(0);
             refreshTodayTomato();
