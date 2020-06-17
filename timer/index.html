@@ -179,17 +179,13 @@
             function count() {
                 var {endTime, notified} = currentPomodoro;
                 var now = Date.now();
-                var seconds = Math.round((endTime - now) / 1000);
+                var seconds = Math.floor((endTime - now) / 1000);
 
                 digitalNode.innerHTML = format(Math.abs(seconds));
                 digitalNode.style.color = seconds > 0 ? '#333' : '#999';
                 timer = setTimeout(count, 1000);
 
-                if (
-                    seconds <= 0 &&
-                    notified < 18 &&
-                    Math.max(seconds % 12) == 0
-                ) {
+                if (seconds <= 0 && notified < 18 && seconds % 12 == 0) {
                     notify();
                 }
             }
