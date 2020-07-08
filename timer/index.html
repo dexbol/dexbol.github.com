@@ -186,7 +186,8 @@
 
                 digitalNode.innerHTML = format(Math.abs(seconds));
                 digitalNode.style.color = seconds > 0 ? '#333' : '#999';
-                document.title = format(seconds, true);
+                document.title =
+                    (seconds < 0 ? '- ' : '') + format(seconds, true);
                 timer = setTimeout(count, 1000);
 
                 if (seconds <= 0 && notified < 8) {
