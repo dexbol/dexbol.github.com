@@ -185,15 +185,17 @@
                 digitalNode.style.color = seconds > 0 ? '#333' : '#999';
                 timer = setTimeout(count, 1000);
 
-                if (seconds <= 0 && notified < 18 && seconds % 12 == 0) {
-                    notify();
+                if (seconds <= 0 && notified < 8) {
+                    theButtonNode.innerText = 'start';
+                    showConfirm();
+                    if (seconds % 12 == 0) {
+                        notify();
+                    }
                 }
             }
 
-            function stop() {
+            function stopNotify() {
                 currentPomodoro.notified = Infinity;
-                theButtonNode.innerText = 'start';
-                showConfirm();
             }
 
             function notify() {
@@ -201,8 +203,8 @@
                 var notice = new Notification('Time Out', {
                     icon: './tomato.png'
                 });
-                notice.addEventListener('close', stop);
-                notice.addEventListener('click', stop);
+                notice.addEventListener('close', stopNotify);
+                notice.addEventListener('click', stopNotify);
             }
 
             function showConfirm() {
@@ -299,6 +301,7 @@
                         refreshTodayTomato();
                     }
                     hideConfirm();
+                    stopNotify();
                 }
             });
             document
