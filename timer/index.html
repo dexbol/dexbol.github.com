@@ -158,7 +158,7 @@
                 );
             }
 
-            function format(s) {
+            function format(s, stripTags) {
                 var minutes = Math.floor(s / 60);
                 var sec = s % 60;
                 var str =
@@ -166,6 +166,9 @@
                     ':' +
                     (sec < 10 ? '0' + sec : sec);
 
+                if (stripTags) {
+                    return str;
+                }
                 return '<i>' + str.split('').join('</i><i>') + '</i>';
             }
 
@@ -183,6 +186,7 @@
 
                 digitalNode.innerHTML = format(Math.abs(seconds));
                 digitalNode.style.color = seconds > 0 ? '#333' : '#999';
+                document.title = format(seconds, true);
                 timer = setTimeout(count, 1000);
 
                 if (seconds <= 0 && notified < 8) {
