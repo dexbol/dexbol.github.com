@@ -124,8 +124,8 @@
                 <button>Save</button>
             </div>
         </div>
-        <script type="text/javascript">
-            const DURATION = 25 * 60 * 1000;
+        <script>
+            const DEFAULT_DURATION = 25 * 60 * 1000;
             const TODAY = getTodayString();
 
             var digitalNode = document.querySelector('.digital');
@@ -173,7 +173,12 @@
             }
 
             function start() {
-                currentPomodoro = getPomodoro(Date.now() + DURATION);
+                var durationMatch = /d=(\d+)(?:$|&)/.exec(location.search);
+                var duration = durationMatch
+                    ? Number(durationMatch[1]) * 60 * 1000
+                    : DEFAULT_DURATION;
+
+                currentPomodoro = getPomodoro(Date.now() + duration);
                 clearTimeout(timer);
                 theButtonNode.innerText = 'interrupt';
                 count();
