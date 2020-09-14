@@ -22,7 +22,9 @@ page_name: post
 <section class="post">
 {% if page.thumb %}
 <div class="thumb">
+<a href="{{ page.thumb }}">
 <img src="{{ page.thumb }}" title="{{ page.title }}" />
+</a>
 </div>
 {% endif %}
 {{ content }}

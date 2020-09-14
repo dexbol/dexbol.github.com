@@ -1,8 +1,9 @@
 ---
 ---
 
-$font: "PingFang SC", "Lantinghei SC", "Microsoft Yahei", "Hiragino Sans GB", "Microsoft Sans Serif", "WenQuanYi Micro Hei", "Noto Sans SC", sans-serif;
-$monospace: "Source Code Pro", Courier, 'Courier New', monospace;
+$font: 'PingFang SC', 'Lantinghei SC', 'Microsoft Yahei', 'Hiragino Sans GB',
+    'Microsoft Sans Serif', 'WenQuanYi Micro Hei', 'Noto Sans SC', sans-serif;
+$monospace: 'Source Code Pro', Courier, 'Courier New', monospace;
 $highlight-color: #999;
 
 @mixin min-screen($res) {
@@ -10,43 +11,40 @@ $highlight-color: #999;
         @content;
     }
 }
-
 body {
     padding: 0;
     margin: 0;
     font: 300 1em/1.8 #{$font};
     color: #555;
-    background-color: #FEFEFE;
+    background-color: #fefefe;
 }
-
 ::selection {
-    color: #FFF;
+    color: #fff;
     background-color: #333;
 }
-
 .page {
     width: 100%;
     height: 100%;
     padding: 0;
     margin: 0;
-    .content, header {
+    .content,
+    header {
         max-width: 660px;
         padding: 0 2em;
         margin: 0 auto;
     }
 }
-
 .page-index {
-    .content, header {
+    .content,
+    header {
         max-width: 1320px;
     }
 }
-
 .header {
     width: 100%;
     height: 46px;
     margin: 0 0 2.6em 0;
-    background: #EFEFEF;
+    background: #efefef;
 
     header {
         display: flex;
@@ -67,7 +65,7 @@ body {
 
         nav {
             span {
-                margin: .5em;
+                margin: 0.5em;
             }
             a {
                 color: #ccc;
@@ -75,7 +73,6 @@ body {
         }
     }
 }
-
 ul.listing {
     display: flex;
     flex-wrap: wrap;
@@ -85,7 +82,7 @@ ul.listing {
 
     .listing-item {
         width: 100%;
-        list-style-type:none;
+        list-style-type: none;
         padding: 0;
         text-decoration: none;
         color: #555;
@@ -129,7 +126,7 @@ ul.listing {
         .excerpt {
             margin: 0;
             padding: 0 0 2.5em 0;
-            font-size: .88em;
+            font-size: 0.88em;
         }
         @include min-screen(660px) {
             width: 300px;
@@ -140,25 +137,29 @@ ul.listing {
         }
     }
 }
-
 .pagination {
     display: flex;
     justify-content: space-between;
     margin: 2em auto;
     text-align: center;
     a {
-        color: #333
+        color: #333;
     }
     span {
         color: #b7aeae;
     }
 }
-
 article {
     a {
         color: #555;
         border-bottom: 1px solid $highlight-color;
         text-decoration: none;
+
+        &[href$='png'],
+        &[href$='jpg'],
+        &[href$='gif'] {
+            border-bottom: none;
+        }
     }
     img {
         max-width: 100%;
@@ -174,9 +175,9 @@ article {
     }
     pre {
         display: block;
-        border: 1px dotted #EEE;
+        border: 1px dotted #eee;
         padding: 1em;
-        font-size: .91em;
+        font-size: 0.91em;
         font-weight: 400;
         line-height: 1.6;
         overflow: auto;
@@ -189,7 +190,12 @@ article {
         padding: 2px 5px;
         font-family: #{$monospace};
     }
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         padding: 0;
         margin: 1.2em 0 0.6em 0;
         color: #000;
@@ -204,12 +210,13 @@ article {
         font-size: 1.8em;
     }
     h3 {
-        font-size: 1.6em;
+        font-size: 1.5em;
     }
     h4 {
-        font-size: 1.4em;
+        font-size: 1.2em;
     }
-    ul, ol {
+    ul,
+    ol {
         padding: 0;
         margin: 0 0 1.2em 1.3em;
         list-style: disc;
@@ -230,10 +237,10 @@ article {
         display: block;
         overflow: auto;
         margin: -0.5em 0 2.2em 0;
-        font-size: .9em;
+        font-size: 0.9em;
         .tags {
             color: #999999;
-            padding: .25em;
+            padding: 0.25em;
         }
     }
     .relative {
@@ -274,11 +281,10 @@ article {
         }
     }
 }
-
 footer {
     display: block;
     color: #909090;
-    font-size: .9em;
+    font-size: 0.9em;
     text-align: center;
     margin: 1em auto;
     a {
