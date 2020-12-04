@@ -4,7 +4,7 @@
     "description": "My Private Pomodoro Technique",
     "icons": [
         {
-            "src": "/timer/tomato.png",
+            "src": "/timer/tomato-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         }
