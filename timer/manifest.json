@@ -1,0 +1,17 @@
+{
+    "short_name": "Tomato Timer",
+    "name": "Tomato",
+    "description": "My Private Pomodoro Technique",
+    "icons": [
+        {
+            "src": "tomato.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/timer/index.html",
+    "theme_color": "white",
+    "background_color": "white",
+    "display": "standalone",
+    "orientation": "portrait-primary"
+}
