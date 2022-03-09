@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title></title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            function toast(msg) {
+                window.webkit.messageHandlers.appShowToastAlertWithText.postMessage(
+                    String(msg)
+                );
+            }
+            alert('加载成功');
+            var x = 1000
+            setTimeout(function () {
+                toast('活得过' + (x/1000) + '秒？');
+            }, x);
+        </script>
+    </body>
+</html>
